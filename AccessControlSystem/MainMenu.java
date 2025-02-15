@@ -49,16 +49,11 @@ public class MainMenu {
         String room = JOptionPane.showInputDialog(parent, "รหัสห้อง:");
         String floor = JOptionPane.showInputDialog(parent, "ชั้น:");
 
-        if (users.containsKey(username) && users.get(username)[0].equals(room) && users.get(username)[1].equals(floor)) {
-            String timestamp = LocalDateTime.now().format(formatter);
-            String logEntry = timestamp + " - " + username + " เข้าถึงห้อง " + room + " ชั้น " + floor;
-            accessLogs.add(logEntry);
-
-            JOptionPane.showMessageDialog(parent, "เข้าถึงห้องสำเร็จ!\nเวลา: " + timestamp);
+        if (AccessValidator.validateUserAccess(username, room, floor)) {
             showMainMenuAfterAction(parent);
-        } else {
+        }
+        else {
             JOptionPane.showMessageDialog(parent, "ข้อมูลไม่ถูกต้อง!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
-
