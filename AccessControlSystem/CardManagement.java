@@ -5,6 +5,11 @@ import static AccessControlSystem.AccessControl.users;
 
 public class CardManagement {
 
+    public interface IUserManagement {
+        void addUser(String username, String room, String floor);
+        void removeUser(String username);
+    }
+
     public static void manageUsers() {
         String[] options = {"เพิ่มผู้ใช้", "ลบผู้ใช้"};
         int choice = JOptionPane.showOptionDialog(null, "เลือกตัวเลือก:", "Manage Users",
@@ -14,16 +19,25 @@ public class CardManagement {
             String username = JOptionPane.showInputDialog("ชื่อผู้ใช้:");
             String room = JOptionPane.showInputDialog("รหัสห้อง:");
             String floor = JOptionPane.showInputDialog("ชั้น:");
-            users.put(username, new String[]{room, floor});
+            addUser(username, room, floor);
             JOptionPane.showMessageDialog(null, "เพิ่มผู้ใช้สำเร็จ");
         } else if (choice == 1) {
             String username = JOptionPane.showInputDialog("ชื่อผู้ใช้ที่ต้องการลบ:");
-            if (users.containsKey(username)) {
-                users.remove(username);
-                JOptionPane.showMessageDialog(null, "ลบผู้ใช้สำเร็จ");
-            } else {
-                JOptionPane.showMessageDialog(null, "ไม่พบผู้ใช้", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            removeUser(username);
+        }
+    }
+
+    // การจัดการผู้ใช้ตาม Interface
+    public static void addUser(String username, String room, String floor) {
+        users.put(username, new String[]{room, floor});
+    }
+
+    public static void removeUser(String username) {
+        if (users.containsKey(username)) {
+            users.remove(username);
+            JOptionPane.showMessageDialog(null, "ลบผู้ใช้สำเร็จ");
+        } else {
+            JOptionPane.showMessageDialog(null, "ไม่พบผู้ใช้", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
