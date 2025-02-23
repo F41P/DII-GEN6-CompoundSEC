@@ -10,12 +10,25 @@ import static AccessControlSystem.AuditLog.logAccess;
 public class AccessValidator {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
-    public interface IAccessValidator {
-        boolean validateUserAccess(String username, String room, String floor);
-    }
-
     public static boolean validateUserAccess(String username, String room, String floor) {
-        if (users.containsKey(username) && users.get(username)[0].equals(room) && users.get(username)[1].equals(floor)) {
+        if (!users.containsKey(username)) {
+            JOptionPane.showMessageDialog(null, "ไม่พบผู้ใช้", "Access Denied", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // 🆕 ใช้ Abstract Class AccessLevel
+        AccessLevel accessLevel;
+        switch (floor.toUpperCase().charAt(0)) {
+            case 'L' -> accessLevel = new LowFloorAccess();
+            case 'M' -> accessLevel = new MediumFloorAccess();
+            case 'H' -> accessLevel = new HighFloorAccess();
+            default -> {
+                JOptionPane.showMessageDialog(null, "ชั้นไม่ถูกต้อง", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+
+        if (accessLevel.hasAccess(room, floor)) {
             String timestamp = LocalDateTime.now().format(formatter);
             logAccess(username, room, floor);
             JOptionPane.showMessageDialog(null, "อนุญาตให้เข้าถึง\nเวลา: " + timestamp, "Access Granted", JOptionPane.INFORMATION_MESSAGE);
