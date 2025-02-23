@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static AccessControlSystem.AccessControl.users;
-import static AccessControlSystem.AuditLog.logAccess;
+import static AccessControlSystem.AuditLog.logRoomAccess;
+import static AccessControlSystem.CardManager.users;
 
 public class AccessValidator {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
@@ -16,7 +16,7 @@ public class AccessValidator {
             return false;
         }
 
-        // 🆕 ใช้ Abstract Class AccessLevel
+        //ใช้ Abstract Class AccessLevel
         AccessLevel accessLevel;
         switch (floor.toUpperCase().charAt(0)) {
             case 'L' -> accessLevel = new LowFloorAccess();
@@ -30,7 +30,7 @@ public class AccessValidator {
 
         if (accessLevel.hasAccess(room, floor)) {
             String timestamp = LocalDateTime.now().format(formatter);
-            logAccess(username, room, floor);
+            logRoomAccess(username, room, floor);
             JOptionPane.showMessageDialog(null, "อนุญาตให้เข้าถึง\nเวลา: " + timestamp, "Access Granted", JOptionPane.INFORMATION_MESSAGE);
             return true;
         } else {

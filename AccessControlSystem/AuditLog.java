@@ -10,14 +10,16 @@ public class AuditLog {
     static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
     // Interface สำหรับการบันทึกการเข้าถึง
-    public interface IAuditLog {
-        void logAccess(String username, String room, String floor);
-
-        void showAccessLogs();
-    }
-    public static void logAccess(String username, String room, String floor) {
+    public static void logRoomAccess(String username, String room, String floor) {
         String timestamp = LocalDateTime.now().format(formatter);
         String logEntry = timestamp + " - " + username + " เข้าถึงห้อง " + room + " ชั้น " + floor;
+        accessLogs.add(logEntry);
+    }
+
+    // บันทึกการเข้าถึงทั่วไป
+    public static void logEvent(String username, String action, String details) {
+        String timestamp = LocalDateTime.now().format(formatter);
+        String logEntry = timestamp + " - " + username + " " + action + " (" + details + ")";
         accessLogs.add(logEntry);
     }
 
